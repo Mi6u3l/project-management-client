@@ -34,7 +34,7 @@ class AddProject extends React.Component {
         event.preventDefault();
         const { title, description, imageUrl, selectedFiles } = this.state;
         const uploadData = new FormData();
-        uploadData.append('file', selectedFiles);
+        uploadData.append('file', imageUrl);
 
         uploadFile(uploadData).then((response) => {
             const newProject = {
