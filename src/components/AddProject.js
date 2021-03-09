@@ -2,6 +2,7 @@ import React from 'react';
 import { addProject, uploadFile } from '../api';
 import { toast } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable'
+import Dropzone from 'react-dropzone'
 
 class AddProject extends React.Component {
 
@@ -17,7 +18,8 @@ class AddProject extends React.Component {
             { value: 'vanilla', label: 'Vanilla' }
           ],
         selectedOption: '',
-        selectedValue: ''
+        selectedValue: '',
+        selectedFiles: []
     }
 
     handleChange = (event) => {
@@ -30,9 +32,9 @@ class AddProject extends React.Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-        const { title, description, imageUrl } = this.state;
+        const { title, description, imageUrl, selectedFiles } = this.state;
         const uploadData = new FormData();
-        uploadData.append('file', imageUrl);
+        uploadData.append('file', selectedFiles);
 
         uploadFile(uploadData).then((response) => {
             const newProject = {
@@ -56,10 +58,10 @@ class AddProject extends React.Component {
     }
 
 
-    handleChange = selectedOption => {
-        this.setState({ selectedOption });
-        console.log(`Option selected:`, selectedOption);
-      };
+    // handleChange = selectedOption => {
+    //     this.setState({ selectedOption });
+    //     console.log(`Option selected:`, selectedOption);
+    //   };
 
     render() {
         const { title, description } = this.state; 
@@ -79,7 +81,22 @@ class AddProject extends React.Component {
                     value={this.state.selectedOption}
                     onChange={this.handleChange}
                     options={this.state.options} />
+                
 
+                <Dropzone onDrop={((acceptedFiles) => 
+                        this.setState({
+                            selectedFiles: acceptedFiles   
+                        })
+                    )}>
+                    {({getRootProps, getInputProps}) => (
+                        <section>
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p>Drag 'n' drop some files here, or click to select files</p>
+                        </div>
+                        </section>
+                    )}
+                </Dropzone>
                 <button type="submit">Create</button>
             </form>
         )

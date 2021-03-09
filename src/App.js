@@ -50,7 +50,7 @@ class App extends React.Component {
             {/* <Route exact path="/projects/add" component={AddProject} /> */}
             <PrivateRoute exact path="/projects/add" component={AddProject} />
             <Route exact path="/projects/:id" component={ProjectDetails} />
-            <Route exact path="/projects/:id/edit" component={EditProject} />
+            <Route exact path="/projects/:id/edit" component={EditProject} />            
             <Route exact path="/login" render={
               (props) => {
                 return <Login {...props} setCurrentUser={this.setCurrentUser} />
