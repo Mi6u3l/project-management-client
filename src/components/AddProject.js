@@ -64,7 +64,7 @@ class AddProject extends React.Component {
     //   };
 
     render() {
-        const { title, description } = this.state; 
+        const { title, description,  selectedFiles} = this.state; 
      
         return (
             <form onSubmit={this.handleFormSubmit} encType="multipart/form-data">
@@ -97,6 +97,15 @@ class AddProject extends React.Component {
                         </section>
                     )}
                 </Dropzone>
+                <ul>
+                {selectedFiles.map((file, index) => {
+                    return (
+                        <li key={index}>
+                            {file.name}
+                        </li>
+                    )
+                })}
+                </ul>
                 <button type="submit">Create</button>
             </form>
         )
