@@ -1,39 +1,32 @@
-import React from 'react';
+import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-class DeleteProject extends React.Component {
-    state = {
-        timeoutId: null
-    }
+export const DeleteProject = ({ id, hardDelete, softDelete, undoDelete }) => {
+    let timeoutId;
 
-    handleDelete = (id) => {
-      const { hardDelete, softDelete } = this.props;
+    const handleDelete = () => {
       softDelete(id);
       
-      this.state.timeoutId = setTimeout(() => {
-        clearTimeout(this.state.timeoutId);
+      timeoutId = setTimeout(() => {
+        clearTimeout(timeoutId);
         hardDelete(id);
-      }, 3000);
+      },  3000)
+     
       toast.warning("Undo delete", {
-          onClose: () => this.undoDelete()
+          onClose: () => {
+            undoDelete(id);
+            clearTimeout(timeoutId);
+          }
         })
     }
+
+    useRef(()=> {
+      return () => {
+        clearTimeout(timeoutId);
+      }
+    }, [])
     
-    componentWillUnmount() {
-      clearTimeout(this.state.timeoutId);
-    }
-
-    undoDelete = () => {
-      const { id, undoDelete } = this.props;
-      undoDelete(id);
-      clearTimeout(this.state.timeoutId);
-    }
-
-    render() {
-      return (
-        <button onClick={() => this.handleDelete(this.props.id)}>Delete</button>
-      )
-    }
+    return (
+      <button onClick={handleDelete}>Delete</button>
+    )
 }
-
-export default DeleteProject;

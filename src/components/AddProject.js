@@ -1,116 +1,69 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { addProject, uploadFile } from '../api';
 import { toast } from 'react-toastify';
-import CreatableSelect from 'react-select/creatable'
 import Dropzone from 'react-dropzone'
 
-class AddProject extends React.Component {
+export const AddProject = ({ history }) => {
+    const titleRef = useRef();
+    const descriptionRef = useRef();
+    
+    const [imageUrl, setImageUrl] = useState();
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
-   // const nameRef = React.useRef();
-   // const descriptionRef = React.useRef();
-    state = {
-        title: '',
-        description: '',
-        imageUrl: 'http://some',
-        options: [
-            { value: 'chocolate', label: 'Chocolate' },
-            { value: 'strawberry', label: 'Strawberry' },
-            { value: 'vanilla', label: 'Vanilla' }
-          ],
-        selectedOption: '',
-        selectedValue: '',
-        selectedFiles: []
-    }
-
-    handleChange = (event) => {
-        let { name, value } = event.target;
-
-        this.setState({
-            [name]: value
-        })
-    }
-
-    handleFormSubmit = (event) => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
-        const { title, description, imageUrl, selectedFiles } = this.state;
         const uploadData = new FormData();
         uploadData.append('file', imageUrl);
 
         uploadFile(uploadData).then((response) => {
             const newProject = {
-                title: title,
-                description: description,
+                title: titleRef.current.value,
+                description: descriptionRef.current.value,
                 imageUrl: response.data.fileUrl
             }
 
             addProject(newProject).then(() => {
                 toast.success('Project created!');
-                this.props.history.push('/projects');
+                history.push('/projects');
             });
         })
     }
+      
+    return (
+        <form onSubmit={handleFormSubmit} encType="multipart/form-data">
+            <label>Title</label>
+            <input type="text" ref={titleRef} />
 
-    handleFileChange = (event) => {
-        console.log(event.target.files[0]);
-        this.setState({
-            imageUrl: event.target.files[0]
-        });
-    }
+            <label>Description</label>
+            <input type="text" ref={descriptionRef} />
 
+            <label>Image</label>
+            <input type="file" onChange={(e) => {
+                setImageUrl(e.target.files[0])
+            }} />            
 
-    // handleChange = selectedOption => {
-    //     this.setState({ selectedOption });
-    //     console.log(`Option selected:`, selectedOption);
-    //   };
-
-    render() {
-        const { title, description,  selectedFiles} = this.state; 
-     
-        return (
-            <form onSubmit={this.handleFormSubmit} encType="multipart/form-data">
-                <label>Title</label>
-                <input type="text" name="title" value={title} onChange={this.handleChange} />
-
-                <label>Description</label>
-                <input type="text" name="description" value={description} onChange={this.handleChange}  />
-
-                <label>Image</label>
-                <input type="file" onChange={this.handleFileChange} />
-
-                <CreatableSelect 
-                    value={this.state.selectedOption}
-                    onChange={this.handleChange}
-                    options={this.state.options} />
-                
-
-                <Dropzone onDrop={((acceptedFiles) => 
-                        this.setState({
-                            selectedFiles: acceptedFiles   
-                        })
-                    )}>
-                    {({getRootProps, getInputProps}) => (
-                        <section>
-                        <div {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            <p>Drag 'n' drop some files here, or click to select files</p>
-                        </div>
-                        </section>
-                    )}
-                </Dropzone>
-                <ul>
-                {selectedFiles.map((file, index) => {
-                    return (
-                        <li key={index}>
-                            {file.name}
-                        </li>
-                    )
-                })}
-                </ul>
-                <button type="submit">Create</button>
-            </form>
-        )
-    }
-
+            <Dropzone onDrop={((acceptedFiles) => 
+                    setSelectedFiles(acceptedFiles)
+                )}>
+                {({getRootProps, getInputProps}) => (
+                    <section>
+                    <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <p>Drag 'n' drop some files here, or click to select files</p>
+                    </div>
+                    </section>
+                )}
+            </Dropzone>
+            <ul>
+            {selectedFiles.map((file, index) => {
+                return (
+                    <li key={index}>
+                        {file.name}
+                    </li>
+                )
+            })}
+            </ul>
+            <button type="submit">Create</button>
+        </form>
+    )
 }
-
-export default AddProject;

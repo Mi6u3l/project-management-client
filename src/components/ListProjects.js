@@ -2,7 +2,7 @@ import React from 'react';
 import { getAllProjects, deleteProject } from '../api';
 import { Link } from 'react-router-dom';
 import { Ul, Image } from '../styles/list';
-import DeleteProject from './DeleteProject';
+import { DeleteProject } from './DeleteProject';
 import socketIOClient from "socket.io-client";
 
 class ListProjects extends React.Component {
