@@ -10,23 +10,23 @@ export const AddProject = ({ history }) => {
     const [imageUrl, setImageUrl] = useState();
     const [selectedFiles, setSelectedFiles] = useState([]);
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
         const uploadData = new FormData();
         uploadData.append('file', imageUrl);
 
-        uploadFile(uploadData).then((response) => {
-            const newProject = {
-                title: titleRef.current.value,
-                description: descriptionRef.current.value,
-                imageUrl: response.data.fileUrl
-            }
+        const response = await uploadFile(uploadData);
 
-            addProject(newProject).then(() => {
-                toast.success('Project created!');
-                history.push('/projects');
-            });
-        })
+        const newProject = {
+            title: titleRef.current.value,
+            description: descriptionRef.current.value,
+            imageUrl: response.data.fileUrl
+        }
+
+        await addProject(newProject);
+        
+        toast.success('Project created!');
+        history.push('/projects');
     }
       
     return (

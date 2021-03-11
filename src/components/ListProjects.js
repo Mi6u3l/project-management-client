@@ -10,11 +10,10 @@ export const ListProjects = () => {
     const [projects, setProjects] = useState([]);
     const isMountedRef = useRef(null);
 
-    useEffect(() => {
+    useEffect(async () => {
         isMountedRef.current = true;
-        getAllProjects().then((response) => {
-            setProjects(response.data);
-        });
+        const response = await getAllProjects();
+        setProjects(response.data);
 
         const socket = socketIOClient(process.env.REACT_APP_PROJECTS_API);
         socket.on("newProject", (newProject) => {
@@ -48,12 +47,11 @@ export const ListProjects = () => {
         })
     }
 
-    const handleDeleteProject = (id) => {
-        deleteProject(id).then(() => {
-            setProjects((projects) => {      
-                return projects.filter(project => project._id !== id)
-            })
-        })
+    const handleDeleteProject = async (id) => {
+        await deleteProject(id);
+        setProjects((projects) => {      
+            return projects.filter(project => project._id !== id)
+         })
     }
         
     return (

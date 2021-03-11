@@ -1,14 +1,12 @@
+import { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { LoggedUserConsumer } from '../context/loggedUser';
 
 export const PrivateRoute = ({ component, ...options }) => {
+    const loggedInUser = useContext(LoggedUserConsumer);
     return (
-        <LoggedUserConsumer>
-            {(loggedInUser) => (
-                loggedInUser 
-                ? <Route {...options} component={component} />
-                : <Redirect to="/login" />
-            )}
-        </LoggedUserConsumer>
+        loggedInUser 
+        ? <Route {...options} component={component} />
+        : <Redirect to="/login" />
     );
 };

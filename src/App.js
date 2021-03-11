@@ -21,16 +21,14 @@ export const App = () => {
     setLoggedInUser(user)
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!loggedInUser) {
       //Check if the user session is still active on the server
-      loggedin()
-        .then((response) => {
-          if (response.data._id) {
-            //there's an active user session on the server
-            setCurrentUser(response.data)
-          }
-        })
+     const response = await loggedin()
+      if (response.data._id) {
+        //there's an active user session on the server
+        setCurrentUser(response.data)
+      }
     }
   }, [loggedInUser]);
   

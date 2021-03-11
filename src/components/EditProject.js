@@ -5,24 +5,22 @@ export const EditProject = ({ match, history }) => {
     const titleRef = useRef();
     const descriptionRef = useRef();
    
-   useEffect(() => {
-        getProject(match.params.id).then((response) => {
-            titleRef.current.value = response.data.title;
-            descriptionRef.current.value = response.data.description;
-        })
+   useEffect(async () => {
+        const response = await getProject(match.params.id)
+        titleRef.current.value = response.data.title;
+        descriptionRef.current.value = response.data.description;
      }, [match.params.id]);
 
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
         const projectUpdated = {
             id: match.params.id,
             title: titleRef.current.value,
             description: descriptionRef.current.value
         }
-        updateProject(projectUpdated).then(() => {
-            history.push(`/projects/${match.params.id}`);
-        });
+        await updateProject(projectUpdated);
+        history.push(`/projects/${match.params.id}`);
     }
 
     return (

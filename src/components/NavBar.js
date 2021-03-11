@@ -4,11 +4,9 @@ import { logout } from '../api';
 
 export const NavBar = ({ loggedInUser, setCurrentUser }) => {
     
-    const logoutUser = () => {
-        logout()
-            .then(() => {
-                setCurrentUser(null);
-            })
+    const logoutUser = async () => {
+        await logout()
+        setCurrentUser(null);
     }
 
     return loggedInUser ? (

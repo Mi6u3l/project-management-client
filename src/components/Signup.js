@@ -7,18 +7,12 @@ export const Signup = ({ history }) => {
     const emailRef = useRef();
     const passwordRef = useRef();
 
-
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
-        signup(usernameRef.current.value, 
+        await signup(usernameRef.current.value, 
             emailRef.current.value, 
             passwordRef.current.value)
-            .then(() => {
-                history.push('/');
-            })
-            .catch(() => {
-                
-            })
+            history.push('/');
     }
 
     return(

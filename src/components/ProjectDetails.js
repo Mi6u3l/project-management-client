@@ -4,18 +4,15 @@ import { getProject, deleteProject } from '../api';
 export const ProjectDetails = ({ match, history }) => {
    const [project, setProject] = useState()
    
-   useEffect(() => {
-    getProject(match.params.id).then((response) => {
-        setProject(response.data)
-    })
+   useEffect(async () => {
+    const response = await getProject(match.params.id);
+    setProject(response.data)
    }, [match.params.id]);
 
-
-    const handleDeleteProject = () => {
-        deleteProject(match.params.id).then(() => {
+    const handleDeleteProject = async () => {
+        await deleteProject(match.params.id)
             //redirect the user /projects
-            history.push('/projects');
-        });
+        history.push('/projects');
     }
 
     return project ? (

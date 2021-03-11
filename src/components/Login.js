@@ -7,18 +7,15 @@ export const Login = ({ setCurrentUser, history }) => {
     const usernameRef = useRef();
     const passwordRef = useRef();
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
-        login(usernameRef.current.value, 
+        const response = await login(
+            usernameRef.current.value, 
             passwordRef.current.value)
-            .then((response) => {
                 //lift up the state to app.js
                 //setCurrentUser which is a prop 
                 setCurrentUser(response.data);
                 history.push('/');
-            }).catch(() => {
-                toast.error('Invalid Login');
-            })
     }
 
     return (
