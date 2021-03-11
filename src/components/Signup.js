@@ -1,56 +1,40 @@
-import React from 'react';
+import { useRef } from 'react';
 import { signup } from '../api';
 import { Link } from 'react-router-dom';
 
-class Signup extends React.Component {
-    state = {
-        username: '',
-        email: '',
-        password: ''
+export const Signup = ({ history }) => {
+    const usernameRef = useRef();
+    const emailRef = useRef();
+    const passwordRef = useRef();
 
-    }
 
-    handleChange = (event) => {  
-        const {name, value} = event.target;
-        this.setState({[name]: value});
-    }
-
-    handleFormSubmit = (event) => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
-        const { username, email, password } = this.state;
-        signup(username, email, password)
+        signup(usernameRef.current.value, 
+            emailRef.current.value, 
+            passwordRef.current.value)
             .then(() => {
-                // login(username, password).then(() => {
-                //     this.props.history.push('/');
-                // })
-                this.props.history.push('/');
-               
+                history.push('/');
             })
             .catch(() => {
                 
             })
     }
 
-    render(){
-        const {username, password, email} = this.state;
-
-        return(
-            <div>
-                <form onSubmit={this.handleFormSubmit}>
-                    <label>Username:</label>
-                    <input type="text" name="username" value={username} onChange={this.handleChange}/>
-                    <label>Email:</label>
-                    <input type="email" name="email" value={email} onChange={this.handleChange}/>
-                    <label>Password:</label>
-                    <input type="password" name="password" value={password} onChange={this.handleChange} />
-                    <button>Signup</button>
-                </form>
-                <p>Already have account? 
-                    <Link to={"/login"}> Login</Link>
-                </p>
-          </div>
-        )
-      }
+    return(
+        <div>
+            <form onSubmit={handleFormSubmit}>
+                <label>Username:</label>
+                <input type="text" ref={usernameRef}/>
+                <label>Email:</label>
+                <input type="email" ref={emailRef} />
+                <label>Password:</label>
+                <input type="password" ref={passwordRef} />
+                <button>Signup</button>
+            </form>
+            <p>Already have account? 
+                <Link to={"/login"}> Login</Link>
+            </p>
+        </div>
+    )
 }
-
-export default Signup;

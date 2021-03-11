@@ -1,25 +1,16 @@
-import React from 'react';
+import { useRef } from 'react';
 import { login } from '../api';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-class Login extends React.Component {
-    state = {
-        username: '',
-        password: ''
-    }
+export const Login = ({ setCurrentUser, history }) => {
+    const usernameRef = useRef();
+    const passwordRef = useRef();
 
-    handleChange = (event) => {
-        const { name, value } = event.target;
-        this.setState({[name] : value})
-    }
-
-    handleFormSubmit = (event) => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
-        const { username, password } = this.state;
-        const { setCurrentUser, history } = this.props;
-
-        login(username, password)
+        login(usernameRef.current.value, 
+            passwordRef.current.value)
             .then((response) => {
                 //lift up the state to app.js
                 //setCurrentUser which is a prop 
@@ -30,26 +21,22 @@ class Login extends React.Component {
             })
     }
 
-    render() {
-        const { username, password } = this.state;
-        return (
-            <>
-                <form onSubmit={this.handleFormSubmit}>
-                    <label>Username</label>
-                    <input type="text" name="username" onChange={this.handleChange} value={username} />
+    return (
+        <>
+            <form onSubmit={handleFormSubmit}>
+                <label>Username</label>
+                <input type="text" name="username" ref={usernameRef} />
 
-                    <label>Password</label>
-                    <input type="password" name="password" onChange={this.handleChange} value={password} />
+                <label>Password</label>
+                <input type="password" name="password" ref={passwordRef} />
 
-                    <button type="submit">Login</button>
-                </form>
-                <p>
-                    Don't have an account?
-                    <Link to="/signup">Signup</Link>
-                </p>
-            </>
-        )
-    }
+                <button type="submit">Login</button>
+            </form>
+            <p>
+                Don't have an account?
+                <Link to="/signup">Signup</Link>
+            </p>
+        </>
+    )
+
 }
-
-export default Login;

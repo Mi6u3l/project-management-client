@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { logout } from '../api';
 
-function NavBar({ loggedInUser, setCurrentUser, history }) {
+export const NavBar = ({ loggedInUser, setCurrentUser }) => {
     
     const logoutUser = () => {
         logout()
@@ -59,5 +59,3 @@ function NavBar({ loggedInUser, setCurrentUser, history }) {
           </>
         )
 }
-
-export default NavBar

@@ -1,17 +1,17 @@
 import './App.scss';
-import ListProjects from './components/ListProjects';
-import ProjectDetails from './components/ProjectDetails';
-import EditProject from './components/EditProject';
+import { ListProjects } from './components/ListProjects';
+import { ProjectDetails } from './components/ProjectDetails';
+import { EditProject } from './components/EditProject';
 import { AddProject } from './components/AddProject';
 import { Route, Switch } from 'react-router-dom';
-import NavBar from './components/NavBar';
+import { NavBar } from './components/NavBar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from 'react';
 import { loggedin } from './api';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import PrivateRoute from './components/PrivateRoute';
+import { Login } from './components/Login';
+import { Signup } from './components/Signup';
+import { PrivateRoute } from './components/PrivateRoute';
 import { LoggedUserProvider } from './context/loggedUser'
 
 export const App = () => {
@@ -32,11 +32,11 @@ export const App = () => {
           }
         })
     }
-  }, []);
+  }, [loggedInUser]);
   
   return (
     <div className="App">
-      <LoggedUserProvider value={'todo'}>
+      <LoggedUserProvider value={loggedInUser}>
         <ToastContainer />
         <NavBar loggedInUser={loggedInUser} setCurrentUser={setCurrentUser} />
         <Switch>
@@ -58,7 +58,7 @@ export const App = () => {
             }
           }/>
         </Switch>
-        </LoggedUserProvider>
+      </LoggedUserProvider>
     </div>
   );
 }

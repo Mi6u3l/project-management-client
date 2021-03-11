@@ -9,6 +9,7 @@ export const DeleteProject = ({ id, hardDelete, softDelete, undoDelete }) => {
       
       timeoutId = setTimeout(() => {
         clearTimeout(timeoutId);
+        debugger;
         hardDelete(id);
       },  3000)
      

@@ -1,52 +1,29 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { getProject, deleteProject } from '../api';
-import { LoggedUserConsumer } from '../context/loggedUser';
 
-class ProjectDetails extends React.Component {
-    state = {
-        id: '',
-        title: '',
-        description: ''
-    }
+export const ProjectDetails = ({ match, history }) => {
+   const [project, setProject] = useState()
+   
+   useEffect(() => {
+    getProject(match.params.id).then((response) => {
+        setProject(response.data)
+    })
+   }, [match.params.id]);
 
-    componentDidMount() {
-       const projectId = this.props.match.params.id;
-       getProject(projectId).then((response) => {
-        this.setState({
-            id: response.data._id,
-            title: response.data.title,
-            description: response.data.description
-        })
-       });
-    }
 
-    handleDeleteProject = (id) => {
-        deleteProject(id).then(() => {
+    const handleDeleteProject = () => {
+        deleteProject(match.params.id).then(() => {
             //redirect the user /projects
-            this.props.history.push('/projects');
+            history.push('/projects');
         });
     }
 
-    render() {
-        const { id, title, description } = this.state;
-        return title ? (
-            <>
-                <LoggedUserConsumer>
-                    {({ loggedInUser }) => (
-                        <div>
-                            <p>{loggedInUser && loggedInUser.username}</p>
-                        </div>
-                    )}
-                </LoggedUserConsumer>
-                <h2>{title}</h2>
-                <h3>{description}</h3>
-                <button onClick={() => this.handleDeleteProject(id)}>Delete</button> 
-                <button onClick={() => {
-                    this.props.history.push(`/projects/${id}/edit`);
-                }}>Edit Project</button>
-            </>
-        ): <div>Loading...</div>
-    }
+    return project ? (
+        <>
+            <h2>{project.title}</h2>
+            <h3>{project.description}</h3>
+            <button onClick={handleDeleteProject}>Delete</button> 
+            <button onClick={() => { history.push(`/projects/${project._id}/edit`) }}>Edit Project</button>
+        </>
+    ): <div>Loading...</div>
 }
-
-export default ProjectDetails;
